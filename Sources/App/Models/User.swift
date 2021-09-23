@@ -8,6 +8,7 @@
 import Foundation
 import Vapor
 import Fluent
+import CommonCrypto
 
 extension FieldKey {
     static var phone:Self{"phone"}
@@ -46,9 +47,14 @@ extension UserGetObject:Content{}
 extension UserModel {
     func create(_ input: UserCreateObject) {
         phone = input.phone
-        passwd = input.passwd
+        let digest = Insecure.MD5.hash(data: input.passwd.data(using: .utf8) ?? Data())
+        passwd = digest.map {
+            String(format: "%02hhx", $0)
+        }.joined()
+//        passwd = input.passwd
+        nickname = input.nickname
     }
     func mapGet() ->UserGetObject {
-        .init( id: id!, phone: phone, nickname: nickname)
+        .init( phone: phone, nickname: nickname)
     }
 }
