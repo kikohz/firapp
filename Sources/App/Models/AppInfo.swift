@@ -59,5 +59,11 @@ struct AppInfpCreateObject:Codable {
     let scteenshot:String
 }
 
+//通过用户信息查找用户用到模型
+struct AppFindObject:Content {
+//    var id: String
+    var appid: String?
+}
+
 
 extension AppInfpCreateObject: Content {}
