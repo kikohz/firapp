@@ -8,7 +8,7 @@ public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder  启用中间件，未public文件夹中的文件提供服务
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     /// config max upload file size
-//    app.routes.defaultMaxBodySize = "10mb"
+    app.routes.defaultMaxBodySize = "10mb"
     app.views.use(.leaf)  //告诉程序使用leaf来做我们的视图
     app.leaf.cache.isEnabled = app.environment.isRelease
     

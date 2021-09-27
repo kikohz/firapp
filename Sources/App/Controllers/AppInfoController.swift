@@ -43,6 +43,7 @@ struct AppInfoController {
     func uploadFile(req:Request) throws ->EventLoopFuture<String> {
         struct Input:Content{
             var file:File
+            var appid:UUID
         }
         let input = try req.content.decode(Input.self)
         guard input .file.data.readableBytes > 0 else {
@@ -57,8 +58,12 @@ struct AppInfoController {
         let prefix = formatter.string(from: .init())
         let fileName = prefix + input.file.filename
         let path = req.application.directory.publicDirectory + fileName
-        
-        
+        //更新数据库
+        let tempInfo = AppInfo()
+        tempInfo.filePath = path
+        tempInfo.id = input.appid
+        self.updateAppinfo(req: req, info: tempInfo)
+//        _ = tempInfo.update(on: req.db)
         return req.application.fileio.openFile(path: path, mode: .write, flags: .allowFileCreation(posixMode: 0x744), eventLoop: req.eventLoop).flatMap { handle in
             req.application.fileio.write(fileHandle: handle, buffer: input.file.data, eventLoop: req.eventLoop).flatMapThrowing { _ in
                 try handle.close()
@@ -67,6 +72,19 @@ struct AppInfoController {
                 return ResponseWrapper<DefaultResponseObj>(protocolCode: .success,msg:"上传成功").makeFutureResponse(req: req)
             }
         }
+    }
+    
+    
+    //MARK - private 操作
+    //更新app info
+    fileprivate func updateAppinfo(req:Request, info:AppInfo) {
+//        _ = info.update(on: req.db)
+        _ = AppInfo.find(info.id, on: req.db).map({ appinfo in
+            if let appinfo = appinfo  {
+                appinfo.filePath = info.filePath
+                _ = appinfo.save(on: req.db)
+            }
+        })
     }
 }
 
