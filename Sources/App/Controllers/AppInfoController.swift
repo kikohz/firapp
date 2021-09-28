@@ -67,11 +67,11 @@ struct AppInfoController {
         formatter.dateFormat = "y-m-d-HH-MM-SS-"
         let prefix = formatter.string(from: .init())
         let fileName = prefix + input.file.filename
-//        let path = req.application.directory.publicDirectory + fileName
-        let path = fileName
+        let path = req.application.directory.publicDirectory + fileName
+//        let path = fileName
         //更新数据库
         let tempInfo = AppInfo()
-        tempInfo.filePath = path
+        tempInfo.filePath = fileName
         tempInfo.id = input.appid
         self.updateAppinfo(req: req, info: tempInfo)
 //        _ = tempInfo.update(on: req.db)
@@ -80,7 +80,7 @@ struct AppInfoController {
                 try handle.close()
             }
             .flatMap { _ in
-                let fileObj = AppFileObject(filePath: path, infoPlistPath: nil)
+                let fileObj = AppFileObject(filePath: fileName, infoPlistPath: nil)
                 return ResponseWrapper(protocolCode: .success, obj:fileObj ,msg:"上传成功").makeFutureResponse(req: req)
             }
         }
