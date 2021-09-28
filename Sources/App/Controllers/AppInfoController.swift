@@ -14,6 +14,7 @@ struct AppInfoController {
     // MARK - endpoints
     //发布应用--也就是上传用户信息
     func publish(req:Request) throws ->EventLoopFuture<String> {
+//        req.logger.info(req.description)
         let input = try req.content.decode(AppInfpCreateObject.self)
         if input.name.count <= 0 || input.desc.count <= 0 || input.scteenshot.count <= 0 {
             return ResponseWrapper<DefaultResponseObj>(protocolCode: .failParamError, msg: "参数错误，请检查").makeFutureResponse(req: req)
@@ -40,6 +41,14 @@ struct AppInfoController {
             return ResponseWrapper(protocolCode: .success, obj: info,msg:"请求成功").makeResponse()
         }
     }
+    
+    //获取应用列表
+    func fetchAll(req:Request) throws ->EventLoopFuture<String> {
+        return AppInfo.query(on: req.db).all().map { appList in
+            return ResponseWrapper(protocolCode: .success, obj: appList,msg:"请求成功").makeResponse()
+        }
+    }
+    //上传安装包
     func uploadFile(req:Request) throws ->EventLoopFuture<String> {
         struct Input:Content{
             var file:File
@@ -69,7 +78,8 @@ struct AppInfoController {
                 try handle.close()
             }
             .flatMap { _ in
-                return ResponseWrapper<DefaultResponseObj>(protocolCode: .success,msg:"上传成功").makeFutureResponse(req: req)
+                let fileObj = AppFileObject(filePath: path, infoPlistPath: nil)
+                return ResponseWrapper(protocolCode: .success, obj:fileObj ,msg:"上传成功").makeFutureResponse(req: req)
             }
         }
     }

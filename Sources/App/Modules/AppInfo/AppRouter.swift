@@ -17,11 +17,13 @@ struct AppRouter:RouteCollection {
         v1Routes.get("appinfo",":appid", use: appinfo.appInfo(req:))
         
         v1Routes.on(.POST, "upload", body: .collect(maxSize: "100mb"), use: appinfo.uploadFile(req:))
+        v1Routes.get("allapp", use: appinfo.fetchAll(req:))
 //        v1Routes.post("upload", use: appinfo.uploadFile(req:))
          //测试页面
         v1Routes.get("uploadtest") { req ->EventLoopFuture<View> in
             req.leaf.render("result")
         }
+        
         
         
 //        let userController = UserController()

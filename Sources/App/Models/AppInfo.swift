@@ -65,5 +65,9 @@ struct AppFindObject:Content {
     var appid: String?
 }
 
+struct AppFileObject:Codable {
+    var filePath: String?
+    var infoPlistPath:String?
+}
 
 extension AppInfpCreateObject: Content {}
