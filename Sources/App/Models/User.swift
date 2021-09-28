@@ -8,7 +8,7 @@
 import Foundation
 import Vapor
 import Fluent
-import CommonCrypto
+//import CommonCrypto
 
 extension FieldKey {
     static var phone:Self{"phone"}
