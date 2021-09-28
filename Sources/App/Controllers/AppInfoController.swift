@@ -67,7 +67,8 @@ struct AppInfoController {
         formatter.dateFormat = "y-m-d-HH-MM-SS-"
         let prefix = formatter.string(from: .init())
         let fileName = prefix + input.file.filename
-        let path = req.application.directory.publicDirectory + fileName
+//        let path = req.application.directory.publicDirectory + fileName
+        let path = fileName
         //更新数据库
         let tempInfo = AppInfo()
         tempInfo.filePath = path
