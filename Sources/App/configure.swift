@@ -11,7 +11,7 @@ public func configure(_ app: Application) throws {
     app.routes.defaultMaxBodySize = "10mb"
     app.views.use(.leaf)  //告诉程序使用leaf来做我们的视图
     app.leaf.cache.isEnabled = app.environment.isRelease
-    
+    app.logger.info("start configure")
     //数据库操作
     app.databases.use(.mysql(
         hostname: Environment.get("DATABASE_HOST") ?? "bj-cynosdbmysql-grp-qb72o7oc.sql.tencentcdb.com",

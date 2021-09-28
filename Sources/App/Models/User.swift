@@ -28,7 +28,7 @@ final class UserModel: Model, Content {
     var passwd:String
     
     @Field(key: "nickname")
-    var nickname:String
+    var nickname:Stringna jiu
     
     init() {}
     

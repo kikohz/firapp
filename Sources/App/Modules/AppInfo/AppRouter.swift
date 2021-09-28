@@ -9,9 +9,6 @@ import Vapor
 struct AppRouter:RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let appinfo = AppInfoController()
-        
-        
-//        routes.post("publish", use: appinfo.publish(req:))
         let v1Routes = routes.grouped("v1")
         v1Routes.post(":publish", use: appinfo.publish(req:))
         v1Routes.get("appinfo",":appid", use: appinfo.appInfo(req:))

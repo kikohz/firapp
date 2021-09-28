@@ -44,6 +44,7 @@ struct AppInfoController {
     
     //获取应用列表
     func fetchAll(req:Request) throws ->EventLoopFuture<String> {
+        req.logger.info("fetchAll")
         return AppInfo.query(on: req.db).all().map { appList in
             return ResponseWrapper(protocolCode: .success, obj: appList,msg:"请求成功").makeResponse()
         }
