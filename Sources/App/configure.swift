@@ -33,18 +33,6 @@ public func configure(_ app: Application) throws {
     print(app.directory.viewsDirectory)
     
     //自定义端口号
-    app.http.server.configuration.hostname = "127.0.0.1"
-    app.http.server.configuration.port = 8081
-    
-    
-    // register routes
-//    let routers:[RouteCollection] = [FrontendRouter(),BlogRouter()]
-    
-//    for router in routers {
-//        try router.boot(routes: app.routes)
-//    }
-    
-    
-//    try router.boot(routes: app.routes)
-//    try routes(app)
+//    app.http.server.configuration.hostname = "127.0.0.1"
+//    app.http.server.configuration.port = 8081
 }
