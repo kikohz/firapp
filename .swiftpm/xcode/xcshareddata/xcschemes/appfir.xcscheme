@@ -92,17 +92,17 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "DATABASE_USERNAME"
-            value = "root"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "DATABASE_NAME"
             value = "vapor"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "DATABASE_NAME"
+            value = "firapp"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "DATABASE_PASSWORD"
-            value = "Wx787169"
+            value = "#kikohz321654"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
