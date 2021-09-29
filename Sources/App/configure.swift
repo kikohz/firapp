@@ -14,13 +14,13 @@ public func configure(_ app: Application) throws {
     app.logger.info("start configure")
     //数据库操作
     app.databases.use(.mysql(
-        hostname: Environment.get("DATABASE_HOST") ?? "bj-cynosdbmysql-grp-qb72o7oc.sql.tencentcdb.com",
+        hostname: Environment.get("DATABASE_HOST") ?? "127.0.0.1",
         port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 27119, //MySQLConfiguration.ianaPortNumber,
-        username: Environment.get("DATABASE_USERNAME") ?? "root",
-        password: Environment.get("DATABASE_PASSWORD") ?? "Wx787169",
+        username: Environment.get("DATABASE_USERNAME") ?? "user",
+        password: Environment.get("DATABASE_PASSWORD") ?? "testmysql",
         database: Environment.get("DATABASE_NAME") ?? "vapor"
     ), as: .mysql)
-    
+
     
     let modules: [Module] = [AppModule()]
     for module in modules {
