@@ -11,18 +11,21 @@ public func configure(_ app: Application) throws {
     app.routes.defaultMaxBodySize = "10mb"
     app.views.use(.leaf)  //告诉程序使用leaf来做我们的视图
     app.leaf.cache.isEnabled = app.environment.isRelease
+    //配置app 加密
+    app.passwords.use(.bcrypt)
     app.logger.info("start configure")
     //数据库操作
     app.databases.use(.mysql(
         hostname: Environment.get("DATABASE_HOST") ?? "127.0.0.1",
         port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 27119, //MySQLConfiguration.ianaPortNumber,
         username: Environment.get("DATABASE_USERNAME") ?? "user",
-        password: Environment.get("DATABASE_PASSWORD") ?? "testmysql",
+//        password: Environment.get("DATABASE_PASSWORD") ?? "testmysql",
+        password: Environment.databasePasswd,
         database: Environment.get("DATABASE_NAME") ?? "vapor"
     ), as: .mysql)
 
     
-    let modules: [Module] = [AppModule()]
+    let modules: [Module] = [AppModule(),UserModule()]
     for module in modules {
         try module.configure(app)
     }

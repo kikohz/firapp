@@ -16,13 +16,13 @@ struct UserSeederL: Migration {
         let user2 = ["phone":"13099887766", "passwd":"123456","nickname":"瘦子"]
         let user3 = ["phone":"13988997766", "passwd":"123456","nickname":"爷爷"]
         return database.eventLoop.flatten([
-            UserModel( phone: user1["phone"]!, passwd: user1["passwd"]!, nickname: user1["nickname"]!).save(on: database),
-            UserModel( phone: user2["phone"]!, passwd: user2["passwd"]!, nickname: user2["nickname"]!).save(on: database),
-            UserModel( phone: user3["phone"]!, passwd: user3["passwd"]!, nickname: user3["nickname"]!).save(on: database),
+            User( phone: user1["phone"]!, passwd: user1["passwd"]!, nickname: user1["nickname"]!).save(on: database),
+            User( phone: user2["phone"]!, passwd: user2["passwd"]!, nickname: user2["nickname"]!).save(on: database),
+            User( phone: user3["phone"]!, passwd: user3["passwd"]!, nickname: user3["nickname"]!).save(on: database),
         ])
     }
     
     func revert(on database: Database) -> EventLoopFuture<Void> {
-        database.schema(UserModel.schema).delete()
+        database.schema(User.schema).delete()
     }
 }

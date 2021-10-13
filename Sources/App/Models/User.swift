@@ -14,7 +14,7 @@ extension FieldKey {
     static var phone:Self{"phone"}
 }
 
-final class UserModel: Model, Content {
+final class User: Model, Content {
     static let schema = "userinfo"      //对应数据库表名
     
     @ID(key: .id)           //表中主键 id
@@ -28,11 +28,11 @@ final class UserModel: Model, Content {
     var passwd:String
     
     @Field(key: "nickname")
-    var nickname:String
+    var nickname:String?
     
     init() {}
     
-    init(id:UUID? = nil, phone: String, passwd:String, nickname:String = "") {
+    init(id:UUID? = nil, phone: String, passwd:String, nickname:String? = nil) {
         self.id = id
         self.phone = phone
         self.passwd = passwd
@@ -40,39 +40,61 @@ final class UserModel: Model, Content {
     }
 }
 
-//api 解析用到
-struct UserCreateObject:Codable {
-    let phone:String
-    let passwd:String
-    let nickname:String
+//api 解析用到的结构
+extension User {
+    //创建用户
+    struct Create:Content {
+        var phone:String
+        var passwd:String
+        var nickname:String?
+    }
+    //获取用户信息
+    struct Get:Content {
+        var phone:String
+        var nickname:String?
+    }
+    //查找用户
+    struct Find:Content {
+        var phone:String?
+    }
 }
 
-struct UserGetObject:Codable {
-//    let id:UUID?
-    let phone:String
-    let nickname:String?
-}
-//通过用户信息查找用户用到模型
-struct UserFindObject:Content {
-//    var id: String
-    var phone: String?
+extension User.Create: Validatable {
+    static func validations(_ validations: inout Validations) {
+        validations.add("phone", as: String.self, is: !.empty /*&& .count(11...)*/ )
+//        validations.add("nickname", as: String.self, is: !.empty)
+        validations.add("passwd", as: String.self, is: .count(8...))
+    }
 }
 
-//扩展api用到model
-extension UserCreateObject: Content{}
-extension UserGetObject:Content{}
-
-extension UserModel {
-    func create(_ input: UserCreateObject) {
+extension User {
+    func create(_ input: User.Create ,_ req:Request) throws{
         phone = input.phone
-        let digest = Insecure.MD5.hash(data: input.passwd.data(using: .utf8) ?? Data())
-        passwd = digest.map {
-            String(format: "%02hhx", $0)
-        }.joined()
-//        passwd = input.passwd
+//        let digest = Insecure.MD5.hash(data: input.passwd.data(using: .utf8) ?? Data())
+//        passwd = digest.map {
+//            String(format: "%02hhx", $0)
+//        }.joined()
+        let digest = try req.password.hash(input.passwd)
+        passwd = digest
         nickname = input.nickname
     }
-    func mapGet() ->UserGetObject {
+    func mapGet() ->User.Get {
         .init( phone: phone, nickname: nickname)
+    }
+    
+    func generateToken() throws ->UserToken {
+        try .init(
+            value: [UInt8].random(count: 16).base64,
+            userID: self.requireID()
+        )
+    }
+}
+
+extension User:ModelAuthenticatable {
+    static let usernameKey = \User.$phone
+    static let passwordHashKey = \User.$passwd
+
+    func verify(password: String) throws -> Bool {
+        try Bcrypt.verify(password, created: self.passwd)
     }
 }
