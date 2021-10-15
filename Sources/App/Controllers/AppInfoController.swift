@@ -12,18 +12,18 @@ import Foundation
 
 struct AppInfoController {
     // MARK - endpoints
-    //发布应用--也就是上传用户信息
+    //发布应用--也就是上传应用信息
     func publish(req:Request) throws ->EventLoopFuture<String> {
 //        req.logger.info(req.description)
         let input = try req.content.decode(AppInfpCreateObject.self)
-        if input.name.count <= 0 || input.desc.count <= 0 || input.scteenshot.count <= 0 {
+        if input.name.count <= 0 || input.desc.count <= 0 || input.scteenshot.count <= 0  || input.platform.count <= 0 {
             return ResponseWrapper<DefaultResponseObj>(protocolCode: .failParamError, msg: "参数错误，请检查").makeFutureResponse(req: req)
         }
         let appinfo = AppInfo()
         appinfo.create(input)
         return appinfo.create(on: req.db).map {
-            appinfo.desc = ""
-            appinfo.screenshot = ""
+            appinfo.desc = ""            //内容太多，所以忽略掉
+            appinfo.screenshot = ""      //内容太多，所以忽略掉
             appinfo.filePath = ""
             return ResponseWrapper(protocolCode: .success, obj: appinfo, msg: "应用发布成功").makeResponse()
         }
@@ -97,6 +97,10 @@ struct AppInfoController {
                 _ = appinfo.save(on: req.db)
             }
         })
+    }
+    //生成plist 文件
+    fileprivate func generatePlistFile(req:Request, info:AppInfo) {
+        
     }
 }
 

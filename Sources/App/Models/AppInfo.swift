@@ -14,6 +14,9 @@ extension FieldKey {
     static var desc:Self{"desc"}
     static var screenshot:Self{"screenshot"}
     static var filePath:Self{"filePath"}
+    static var platform:Self{"platform"}
+    static var icon:Self{"icon"}
+    static var bundleId:Self{"bundleId"}
 }
 final class AppInfo: Model, Content {
     static let schema = "appinfo"
@@ -33,14 +36,32 @@ final class AppInfo: Model, Content {
     @Field(key: .filePath)
     var filePath:String?
     
+    @Field(key: .platform)
+    var platform:String
+    
+    @Field(key: .icon)
+    var icon:String
+    
+    @Field(key: .bundleId)
+    var bundleId:String
+    
     init() {}
     
-    init(id:UUID? = nil ,name:String, desc:String, screenshot:String, filePath:String = "") {
-        self.id = id
-        self.name = name
-        self.desc = desc
-        self.screenshot = screenshot
-        self.filePath = filePath
+    init(
+        id:UUID? = nil ,
+        name:String,
+        desc:String,
+        screenshot:String,
+        filePath:String = "",
+        platform:String,
+        icon:String,
+        bundleId:String = "") {
+            self.id = id
+            self.name = name
+            self.desc = desc
+            self.screenshot = screenshot
+            self.filePath = filePath
+            self.bundleId = bundleId
     }
 }
 
@@ -49,6 +70,9 @@ extension AppInfo {
         name = input.name
         desc = input.desc
         screenshot = input.scteenshot
+        platform = input.platform
+        icon = ""     //预留字段，后续接续安装包获取到
+        bundleId = input.bundleId
     }
 }
 
@@ -57,6 +81,8 @@ struct AppInfpCreateObject:Codable {
     let name:String
     let desc:String
     let scteenshot:String
+    let platform:String
+    let bundleId:String
 }
 
 //通过用户信息查找用户用到模型

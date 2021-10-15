@@ -14,7 +14,7 @@ struct UserMigration_v1_0_0:Migration {
             .field("phone",.string,.required)
             .field("passwd",.string,.required)
             .field("nickname",.string)
-            .unique(on: .phone, name: "phone")
+            .unique(on: .phone, name: "phone")    //unique 唯一字段避免重复
             .create()
     }
 

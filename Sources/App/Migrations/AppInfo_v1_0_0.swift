@@ -15,6 +15,9 @@ struct AppInfo_v1_0_0:Migration {
             .field(.desc,.string,.required)
             .field(.screenshot,.string,.required)
             .field(.filePath,.string)
+            .field(.platform,.string,.required)
+            .field(.icon,.string,.required)
+            .field(.bundleId,.string,.required).unique(on: .bundleId)
             .create()
     }
     func revert(on database: Database) -> EventLoopFuture<Void> {
