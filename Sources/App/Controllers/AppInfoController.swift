@@ -41,6 +41,18 @@ struct AppInfoController {
             return ResponseWrapper(protocolCode: .success, obj: info,msg:"请求成功").makeResponse()
         }
     }
+    //通过bid获取应用信息
+    func appInfoWithBid(req:Request) throws->EventLoopFuture<String> {
+        guard let bid = req.parameters.get("bid") as String? else {
+            return ResponseWrapper<DefaultResponseObj>(protocolCode: .failParamError,msg: "参数错误，请检查").makeFutureResponse(req: req)
+        }
+        return AppInfo.query(on: req.db).filter(\.$bid == bid).first().map {appinfo in
+            guard let info = appinfo else {
+                return ResponseWrapper<DefaultResponseObj>(protocolCode: .failAccountNoExisted, msg: "没有找到数据").makeResponse()
+            }
+            return ResponseWrapper(protocolCode: .success, obj: info,msg:"请求成功").makeResponse()
+        }
+    }
     
     //获取应用列表
     func fetchAll(req:Request) throws ->EventLoopFuture<String> {

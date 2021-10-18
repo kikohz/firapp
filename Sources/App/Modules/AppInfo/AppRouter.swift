@@ -12,6 +12,7 @@ struct AppRouter:RouteCollection {
         let v1Routes = routes.grouped("v1")
         v1Routes.post("publish", use: appinfo.publish(req:))
         v1Routes.get("appinfo",":appid", use: appinfo.appInfo(req:))
+        v1Routes.get("appinfo",":bid", use: appinfo.appInfoWithBid(req:))
         
         v1Routes.on(.POST, "upload", body: .collect(maxSize: "100mb"), use: appinfo.uploadFile(req:))
         v1Routes.get("allapp", use: appinfo.fetchAll(req:))

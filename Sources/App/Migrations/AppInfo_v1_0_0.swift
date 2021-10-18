@@ -13,7 +13,7 @@ struct AppInfo_v1_0_0:Migration {
             .id()
             .field(.name,.string,.required)
             .field(.desc,.string,.required)
-            .field(.screenshot,.string,.required)
+            .field(.screenshot,.string)
             .field(.filePath,.string)
             .field(.platform,.string,.required)
             .field(.icon,.string,.required)

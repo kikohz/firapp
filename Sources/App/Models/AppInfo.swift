@@ -77,7 +77,7 @@ extension AppInfo {
         desc = input.desc
         screenshot = input.scteenshot
         platform = input.platform
-        icon = ""     //预留字段，后续接续安装包获取到
+        icon = "https://objectstorage.ap-seoul-1.oraclecloud.com/n/cno3iavztv8w/b/mybox/o/appicon.png"     //预留字段，后续接续安装包获取到
         bundleId = input.bundleId
         bid = bundleId.toBase64()
     }
@@ -97,6 +97,10 @@ struct AppFindObject:Content {
 //    var id: String
     var appid: String?
 }
+//通过bid查找应用信息
+//struct AppFindBid:Content {
+//    var bid: String?
+//}
 
 struct AppFileObject:Codable {
     var filePath: String?
