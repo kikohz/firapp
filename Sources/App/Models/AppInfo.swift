@@ -75,7 +75,7 @@ extension AppInfo {
     func create(_ input:AppInfpCreateObject) {
         name = input.name
         desc = input.desc
-        screenshot = input.scteenshot
+        screenshot = input.scteenshot ?? ""
         platform = input.platform
         icon = "https://objectstorage.ap-seoul-1.oraclecloud.com/n/cno3iavztv8w/b/mybox/o/appicon.png"     //预留字段，后续接续安装包获取到
         bundleId = input.bundleId
@@ -87,7 +87,7 @@ extension AppInfo {
 struct AppInfpCreateObject:Codable {
     let name:String
     let desc:String
-    let scteenshot:String
+    let scteenshot:String?
     let platform:String
     let bundleId:String
 }

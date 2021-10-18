@@ -16,7 +16,7 @@ struct AppInfoController {
     func publish(req:Request) throws ->EventLoopFuture<String> {
 //        req.logger.info(req.description)
         let input = try req.content.decode(AppInfpCreateObject.self)
-        if input.name.count <= 0 || input.desc.count <= 0 || input.platform.count <= 0 {
+        if input.name.count <= 0 || input.desc.count <= 0 || input.platform.count <= 0 || input.bundleId.count <= 0 {
             return ResponseWrapper<DefaultResponseObj>(protocolCode: .failParamError, msg: "参数错误，请检查").makeFutureResponse(req: req)
         }
         let appinfo = AppInfo()
