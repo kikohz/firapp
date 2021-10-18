@@ -14,6 +14,6 @@ struct UserModule: Module {
     }
     
     var migrations: [Migration] {
-        [UserMigration_v1_0_0(),UserSeederL(),UserToken.Migration()]
+        [UserMigration_v1_0_0(),UserToken.Migration()]
     }
 }

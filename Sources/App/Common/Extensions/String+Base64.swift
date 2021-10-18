@@ -14,4 +14,8 @@ extension String {
         }
         return String(data: data, encoding: .utf8)
     }
+    
+    func toBase64() ->String {
+        return Data(self.utf8).base64EncodedString()
+    }
 }

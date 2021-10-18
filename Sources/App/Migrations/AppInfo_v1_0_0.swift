@@ -17,7 +17,8 @@ struct AppInfo_v1_0_0:Migration {
             .field(.filePath,.string)
             .field(.platform,.string,.required)
             .field(.icon,.string,.required)
-            .field(.bundleId,.string,.required).unique(on: .bundleId)
+            .field(.bundleId,.string,.required).unique(on: .bundleId)   //unique添加约束 没有重复值
+            .field(.bid,.string,.required)
             .create()
     }
     func revert(on database: Database) -> EventLoopFuture<Void> {

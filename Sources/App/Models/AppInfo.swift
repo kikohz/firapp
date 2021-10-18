@@ -17,6 +17,7 @@ extension FieldKey {
     static var platform:Self{"platform"}
     static var icon:Self{"icon"}
     static var bundleId:Self{"bundleId"}
+    static var bid:Self{"bid"}
 }
 final class AppInfo: Model, Content {
     static let schema = "appinfo"
@@ -45,6 +46,9 @@ final class AppInfo: Model, Content {
     @Field(key: .bundleId)
     var bundleId:String
     
+    @Field(key: .bid)
+    var bid:String
+    
     init() {}
     
     init(
@@ -55,13 +59,15 @@ final class AppInfo: Model, Content {
         filePath:String = "",
         platform:String,
         icon:String,
-        bundleId:String = "") {
+        bundleId:String = "",
+        bid:String = "") {
             self.id = id
             self.name = name
             self.desc = desc
             self.screenshot = screenshot
             self.filePath = filePath
             self.bundleId = bundleId
+            self.bid = bid
     }
 }
 
@@ -73,6 +79,7 @@ extension AppInfo {
         platform = input.platform
         icon = ""     //预留字段，后续接续安装包获取到
         bundleId = input.bundleId
+        bid = bundleId.toBase64()
     }
 }
 
