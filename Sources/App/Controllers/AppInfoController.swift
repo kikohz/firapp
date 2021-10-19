@@ -121,7 +121,7 @@ struct AppInfoController {
     //生成plist 文件
     
     fileprivate func generatePlistFile(plistFilePath:String, appinfo:AppInfo) throws{
-        let host = "https://arm.bllgo.com"
+        let host = Environment.get("SERVICE_HOST") ?? "https://fir.bllgo.com"
         let ipaurl = host + appinfo.filePath!
         let iconUrl = appinfo.icon
         let appVersion = "1.0.0"
