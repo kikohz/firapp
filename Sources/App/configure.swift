@@ -6,7 +6,7 @@ import Leaf
 // configures your application
 public func configure(_ app: Application) throws {
     #if os(Linux)
-    app.directory.publicDirectory = "/var/www/firapp"
+    app.directory.publicDirectory = "/var/www/firapp/file/"
     #endif
     // uncomment to serve files from /Public folder  启用中间件，为public文件夹中的文件提供服务
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))

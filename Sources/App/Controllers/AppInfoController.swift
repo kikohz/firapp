@@ -77,7 +77,8 @@ struct AppInfoController {
         }
         let formatter = DateFormatter()
         formatter.dateFormat = "y-m-d-HH-MM-SS-"
-        let prefix = formatter.string(from: .init())
+        let prefix = String(format:"%.0f", Date().timeIntervalSince1970)
+//        let prefix = formatter.string(from: .init())
         let fileName = prefix + input.file.filename
         let path = req.application.directory.publicDirectory + fileName
 //        let path = fileName
