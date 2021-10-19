@@ -75,8 +75,8 @@ struct AppInfoController {
         if !isExeFile {
             return ResponseWrapper<DefaultResponseObj>(protocolCode: .failParamError, msg: "请检查文件类型").makeFutureResponse(req: req)
         }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "y-m-d-HH-MM-SS-"
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "y-m-d-HH-MM-SS-"
         let prefix = String(format:"%.0f", Date().timeIntervalSince1970)
 //        let prefix = formatter.string(from: .init())
         let fileName = prefix + input.file.filename
@@ -84,7 +84,7 @@ struct AppInfoController {
 //        let path = fileName
         //更新数据库
         let tempInfo = AppInfo()
-        tempInfo.filePath = fileName
+        tempInfo.filePath = "/file/" + fileName
         tempInfo.id = input.appid
         self.updateAppinfo(req: req, info: tempInfo)
 //        _ = tempInfo.update(on: req.db)
