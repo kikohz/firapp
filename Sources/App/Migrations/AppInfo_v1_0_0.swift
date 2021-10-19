@@ -15,6 +15,7 @@ struct AppInfo_v1_0_0:Migration {
             .field(.desc,.string,.required)
             .field(.screenshot,.string)
             .field(.filePath,.string)
+            .field(.plistPath,.string)
             .field(.platform,.string,.required)
             .field(.icon,.string,.required)
             .field(.bundleId,.string,.required).unique(on: .bundleId)   //unique添加约束 没有重复值

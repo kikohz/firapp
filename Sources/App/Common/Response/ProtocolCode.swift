@@ -15,6 +15,7 @@ enum ProtocolCode:Int, Codable {
     
     case failAccountHasExisted = 10001
     case failAccountNoExisted = 10002
+    case plistError = 100003
     
     case failArticleNoExisted = 20003
     

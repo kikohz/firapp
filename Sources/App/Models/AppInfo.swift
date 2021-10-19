@@ -18,6 +18,7 @@ extension FieldKey {
     static var icon:Self{"icon"}
     static var bundleId:Self{"bundleId"}
     static var bid:Self{"bid"}
+    static var plistPath:Self{"plistPath"}
 }
 final class AppInfo: Model, Content {
     static let schema = "appinfo"
@@ -49,6 +50,9 @@ final class AppInfo: Model, Content {
     @Field(key: .bid)
     var bid:String
     
+    @Field(key: .plistPath)
+    var plistPath:String?
+    
     init() {}
     
     init(
@@ -57,6 +61,7 @@ final class AppInfo: Model, Content {
         desc:String,
         screenshot:String,
         filePath:String = "",
+        plistPath:String = "",
         platform:String,
         icon:String,
         bundleId:String = "",
@@ -68,6 +73,7 @@ final class AppInfo: Model, Content {
             self.filePath = filePath
             self.bundleId = bundleId
             self.bid = bid
+            self.plistPath = plistPath
     }
 }
 

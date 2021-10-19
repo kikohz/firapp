@@ -25,6 +25,7 @@ struct AppInfoController {
             appinfo.desc = ""            //内容太多，所以忽略掉
             appinfo.screenshot = ""      //内容太多，所以忽略掉
             appinfo.filePath = ""
+            appinfo.plistPath = ""
             return ResponseWrapper(protocolCode: .success, obj: appinfo, msg: "应用发布成功").makeResponse()
         }
     }
@@ -82,47 +83,83 @@ struct AppInfoController {
 //        let prefix = formatter.string(from: .init())
         let fileName = prefix + input.file.filename
         let path = req.application.directory.publicDirectory + fileName
-//        let path = fileName
         //更新数据库
         let tempInfo = AppInfo()
         tempInfo.filePath = "/file/" + fileName
-//        tempInfo.id = input.appid
+        tempInfo.plistPath = "/file/\(input.bid).plist"
         tempInfo.bid = input.bid
         self.updateAppinfo(req: req, info: tempInfo)
-//        _ = tempInfo.update(on: req.db)
         return req.application.fileio.openFile(path: path, mode: .write, flags: .allowFileCreation(posixMode: 0x744), eventLoop: req.eventLoop).flatMap { handle in
             req.application.fileio.write(fileHandle: handle, buffer: input.file.data, eventLoop: req.eventLoop).flatMapThrowing { _ in
                 try handle.close()
             }
             .flatMap { _ in
-                let fileObj = AppFileObject(filePath: tempInfo.filePath, infoPlistPath: nil)
+                let fileObj = AppFileObject(filePath: tempInfo.filePath, infoPlistPath: tempInfo.plistPath)
                 return ResponseWrapper(protocolCode: .success, obj:fileObj ,msg:"上传成功").makeFutureResponse(req: req)
             }
         }
     }
     
-    
     //MARK - private 操作
     //更新app info
     fileprivate func updateAppinfo(req:Request, info:AppInfo) {
-//        _ = info.update(on: req.db)
         _ = AppInfo.query(on: req.db).filter(\.$bid == info.bid).first().map({ appinfo in
             if let appinfo = appinfo  {
                 appinfo.filePath = info.filePath
                 _ = appinfo.save(on: req.db)
+                //iOS 需要生成 plist文件
+                if appinfo.platform == "iOS" {
+                    let path = req.application.directory.publicDirectory + "\(info.bid).plist"
+                    do{
+                        try self.generatePlistFile(plistFilePath: path, appinfo: appinfo)
+                    }
+                    catch {}
+                }
             }
         })
-//        _ = AppInfo.find(info.id, on: req.db).map({ appinfo in
-//            if let appinfo = appinfo  {
-//                appinfo.filePath = info.filePath
-//                _ = appinfo.save(on: req.db)
-//            }
-//        })
     }
     //生成plist 文件
-    fileprivate func generatePlistFile(req:Request, info:AppInfo) {
-        
+    
+    fileprivate func generatePlistFile(plistFilePath:String, appinfo:AppInfo) throws{
+        let host = "https://arm.bllgo.com"
+        let ipaurl = host + appinfo.filePath!
+        let iconUrl = appinfo.icon
+        let appVersion = "1.0.0"
+        let softPackage = ["kid":"software-package","url":ipaurl]
+        let iconDsNode:[String:Any] = ["kid":"display-image","needs-shine":false,"url":iconUrl]
+        let assets = [softPackage,iconDsNode]
+        let metadata:[String:Any] = ["bundle-identifier":appinfo.bundleId ,"bundle-version":appVersion,"kind":"software","title":appinfo.name]
+        let plistInfo:[String:Any] = ["assets":assets,"metadata":[metadata]]
+        let plistRoot = ["items":plistInfo]
+        let data = try PropertyListSerialization.data(fromPropertyList: plistRoot, format: .xml, options: 0)
+        try data.write(to: URL(fileURLWithPath: plistFilePath))
     }
+    
+//    fileprivate func generatePlistFile(req:Request, info:AppInfo) throws ->String {
+//        let host = "https://arm.bllgo.com"
+//        let ipaurl = host + info.filePath!
+//        let path = host + "/file/\(info.bid).plist"
+//        _ = AppInfo.query(on: req.db).filter(\.$bid == info.bid).first().map { appinfo in
+//            if appinfo != nil {
+//                let iconUrl = ""
+//                let appVersion = "1.0.0"
+//                let softPackage = ["kid":"software-package","url":ipaurl]
+//        //        let iconNode:[String:Any] = ["kid":"full-size-image","needs-shine":false,"url":iconUrl]
+//                let iconDsNode:[String:Any] = ["kid":"display-image","needs-shine":false,"url":iconUrl]
+//                let assets = [softPackage,iconDsNode]
+//                let metadata:[String:Any] = ["bundle-identifier":appinfo?.bundleId ?? "","bundle-version":appVersion,"kind":"software","title":appinfo?.name ?? ""]
+//                let plistInfo:[String:Any] = ["assets":assets,"metadata":[metadata]]
+//                let plistRoot = ["items":plistInfo]
+//                do{
+//                    let data = try PropertyListSerialization.data(fromPropertyList: plistRoot, format: .xml, options: 0)
+//                    try data.write(to: URL(fileURLWithPath: path))
+//                }
+//                catch {
+//                }
+//            }
+//        }
+//        return path
+//    }
 }
 
 
