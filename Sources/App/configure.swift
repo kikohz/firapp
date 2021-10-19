@@ -2,10 +2,14 @@ import Fluent
 import FluentMySQLDriver
 import Vapor
 import Leaf
+import Darwin
 
 // configures your application
 public func configure(_ app: Application) throws {
-    // uncomment to serve files from /Public folder  启用中间件，未public文件夹中的文件提供服务
+    #if os(Linux)
+    app.directory.publicDirectory = "/var/www/firapp"
+    #endif
+    // uncomment to serve files from /Public folder  启用中间件，为public文件夹中的文件提供服务
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     /// config max upload file size
     app.routes.defaultMaxBodySize = "10mb"
