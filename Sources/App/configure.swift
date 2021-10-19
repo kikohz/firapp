@@ -2,7 +2,6 @@ import Fluent
 import FluentMySQLDriver
 import Vapor
 import Leaf
-import Darwin
 
 // configures your application
 public func configure(_ app: Application) throws {
