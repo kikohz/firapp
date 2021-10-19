@@ -106,6 +106,7 @@ struct AppInfoController {
         _ = AppInfo.query(on: req.db).filter(\.$bid == info.bid).first().map({ appinfo in
             if let appinfo = appinfo  {
                 appinfo.filePath = info.filePath
+                appinfo.plistPath = info.plistPath
                 _ = appinfo.save(on: req.db)
                 //iOS 需要生成 plist文件
                 if appinfo.platform == "iOS" {
@@ -119,7 +120,6 @@ struct AppInfoController {
         })
     }
     //生成plist 文件
-    
     fileprivate func generatePlistFile(plistFilePath:String, appinfo:AppInfo) throws{
         let host = Environment.get("SERVICE_HOST") ?? "https://fir.bllgo.com"
         let ipaurl = host + appinfo.filePath!
