@@ -125,41 +125,61 @@ struct AppInfoController {
         let ipaurl = host + appinfo.filePath!
         let iconUrl = appinfo.icon
         let appVersion = "1.0.0"
-        let softPackage = ["kid":"software-package","url":ipaurl]
-        let iconDsNode:[String:Any] = ["kid":"display-image","needs-shine":false,"url":iconUrl]
-        let assets = [softPackage,iconDsNode]
-        let metadata:[String:Any] = ["bundle-identifier":appinfo.bundleId ,"bundle-version":appVersion,"kind":"software","title":appinfo.name]
-        let plistInfo:[String:Any] = ["assets":assets,"metadata":[metadata]]
-        let plistRoot = ["items":plistInfo]
-        let data = try PropertyListSerialization.data(fromPropertyList: plistRoot, format: .xml, options: 0)
-        try data.write(to: URL(fileURLWithPath: plistFilePath))
+        let plistStr = """
+        <?xml version=\"1.0\" encoding=\"UTF-8\"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+            <dict>
+                <key>items</key>
+                <array>
+                    <dict>
+                        <key>assets</key>
+                        <array>
+                            <dict>
+                                <key>kind</key>
+                                <string>software-package</string>
+                                <key>url</key>
+                                <string>\(ipaurl)</string>
+                            </dict>
+                            <dict>
+                                 <key>kind</key>
+                                 <string>display-image</string>
+                                 <key>need-shine</key>
+                                 <integer>0</integer>
+                                 <key>url</key>
+                                 <string>\(iconUrl)</string>
+                            </dict>
+                        </array>
+                        <key>metadata</key>
+                        <dict>
+                            <key>bundle-identifier</key>
+                            <string>\(appinfo.bundleId)</string>
+                            <key>bundle-version</key>
+                            <string>\(appVersion)</string>
+                            <key>kind</key>
+                            <string>software</string>
+                            <key>subtitle</key>
+                            <string>在线安装</string>
+                            <key>title</key>
+                            <string>\(appinfo.name)</string>
+                        </dict>
+                    </dict>
+                </array>
+            </dict>
+        </plist>
+        """
+        try plistStr.write(toFile: plistFilePath, atomically: true, encoding: .utf8)
+//        let softPackage = ["kid":"software-package","url":ipaurl]
+//        let iconDsNode:[String:Any] = ["kid":"display-image","needs-shine":false,"url":iconUrl]
+//        let assets = [softPackage,iconDsNode]
+//        let metadata:[String:Any] = ["bundle-identifier":appinfo.bundleId ,"bundle-version":appVersion,"kind":"software","title":appinfo.name]
+//        let plistInfo:[String:Any] = ["assets":assets,"metadata":metadata]
+//        let plistS = [plistInfo]
+//        let plistRoot = ["items":plistS]
+//
+//        let data = try PropertyListSerialization.data(fromPropertyList: plistRoot, format: .xml, options: 0)
+//        try data.write(to: URL(fileURLWithPath: plistFilePath))
     }
-    
-//    fileprivate func generatePlistFile(req:Request, info:AppInfo) throws ->String {
-//        let host = "https://arm.bllgo.com"
-//        let ipaurl = host + info.filePath!
-//        let path = host + "/file/\(info.bid).plist"
-//        _ = AppInfo.query(on: req.db).filter(\.$bid == info.bid).first().map { appinfo in
-//            if appinfo != nil {
-//                let iconUrl = ""
-//                let appVersion = "1.0.0"
-//                let softPackage = ["kid":"software-package","url":ipaurl]
-//        //        let iconNode:[String:Any] = ["kid":"full-size-image","needs-shine":false,"url":iconUrl]
-//                let iconDsNode:[String:Any] = ["kid":"display-image","needs-shine":false,"url":iconUrl]
-//                let assets = [softPackage,iconDsNode]
-//                let metadata:[String:Any] = ["bundle-identifier":appinfo?.bundleId ?? "","bundle-version":appVersion,"kind":"software","title":appinfo?.name ?? ""]
-//                let plistInfo:[String:Any] = ["assets":assets,"metadata":[metadata]]
-//                let plistRoot = ["items":plistInfo]
-//                do{
-//                    let data = try PropertyListSerialization.data(fromPropertyList: plistRoot, format: .xml, options: 0)
-//                    try data.write(to: URL(fileURLWithPath: path))
-//                }
-//                catch {
-//                }
-//            }
-//        }
-//        return path
-//    }
 }
 
 
