@@ -113,4 +113,7 @@ struct AppFileObject:Codable {
     var infoPlistPath:String?
 }
 
+struct AppDeleteObj:Codable {
+    var appid:UUID?
+}
 extension AppInfpCreateObject: Content {}

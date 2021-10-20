@@ -100,6 +100,19 @@ struct AppInfoController {
         }
     }
     
+    //删除应用
+    func delete(req:Request) throws ->EventLoopFuture<String> {
+        let deleteInfo = try req.query.decode(AppDeleteObj.self)
+        guard deleteInfo.appid != nil else {
+            return ResponseWrapper<DefaultResponseObj>(protocolCode: .failParamError,msg: "参数错误，请检查").makeFutureResponse(req: req)
+        }
+        let info = AppInfo()
+        info.id = deleteInfo.appid
+        return info.delete(on: req.db).map {
+            return ResponseWrapper<DefaultResponseObj>(protocolCode: .success, msg: "删除成功").makeResponse()
+        }
+    }
+    
     //MARK - private 操作
     //更新app info
     fileprivate func updateAppinfo(req:Request, info:AppInfo) {
