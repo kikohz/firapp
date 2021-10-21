@@ -1,7 +1,13 @@
 import Fluent
-import FluentMySQLDriver
+//import FluentMySQLDriver
+import FluentPostgresDriver
 import Vapor
 import Leaf
+
+
+extension Application {
+    static let databaseUrl = URL(string: Environment.get("DB_URL")!)!
+}
 
 // configures your application
 public func configure(_ app: Application) throws {
@@ -18,14 +24,15 @@ public func configure(_ app: Application) throws {
     app.passwords.use(.bcrypt)
     app.logger.info("start configure")
     //数据库操作
-    app.databases.use(.mysql(
-        hostname: Environment.get("DATABASE_HOST") ?? "127.0.0.1",
-        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 27119, //MySQLConfiguration.ianaPortNumber,
-        username: Environment.get("DATABASE_USERNAME") ?? "user",
-//        password: Environment.get("DATABASE_PASSWORD") ?? "testmysql",
-        password: Environment.databasePasswd,
-        database: Environment.get("DATABASE_NAME") ?? "vapor"
-    ), as: .mysql)
+    app.databases.use(try .postgres(url: Application.databaseUrl), as: .psql)
+//    app.databases.use(.mysql(
+//        hostname: Environment.get("DATABASE_HOST") ?? "127.0.0.1",
+//        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 27119, //MySQLConfiguration.ianaPortNumber,
+//        username: Environment.get("DATABASE_USERNAME") ?? "user",
+////        password: Environment.get("DATABASE_PASSWORD") ?? "testmysql",
+//        password: Environment.databasePasswd,
+//        database: Environment.get("DATABASE_NAME") ?? "vapor"
+//    ), as: .mysql)
 
     
     let modules: [Module] = [AppModule(),UserModule()]
