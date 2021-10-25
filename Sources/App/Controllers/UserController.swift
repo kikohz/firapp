@@ -23,12 +23,12 @@ struct UserController {
                     return ResponseWrapper(protocolCode: .success, obj: usertoken, msg: "登录成功").makeResponse()
                 }
                 else {
-                    return ResponseWrapper<DefaultResponseObj>(protocolCode: .failTokenInvalid, msg: "登录失败，请检查您的登录信息").makeResponse()
+                    return ResponseWrapper<DefaultResponseObj>(protocolCode: .failLoginInfo, msg: "登录失败，请检查您的登录信息").makeResponse()
                 }
             }
         }
         catch {
-            return ResponseWrapper<DefaultResponseObj>(protocolCode: .failTokenInvalid, msg: "登录失败，请检查您的登录信息").makeFutureResponse(req: req)
+            return ResponseWrapper<DefaultResponseObj>(protocolCode: .failLoginInfo, msg: "登录失败，请检查您的登录信息").makeFutureResponse(req: req)
         }
         //自己做验证
 //        guard let basic = req.headers.basicAuthorization else {

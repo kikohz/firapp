@@ -9,13 +9,15 @@ enum ProtocolCode:Int, Codable {
     case success = 200
     
     case failParamError = 400
-    case failTokenInvalid = 401
+    
     
     case failInternalError = 500
     
     case failAccountHasExisted = 10001
     case failAccountNoExisted = 10002
     case plistError = 100003
+    case failLoginInfo = 100004
+    case failTokenInvalid = 100005
     
     case failArticleNoExisted = 20003
     
